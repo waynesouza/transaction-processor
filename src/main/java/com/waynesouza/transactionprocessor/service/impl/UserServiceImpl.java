@@ -3,6 +3,7 @@ package com.waynesouza.transactionprocessor.service.impl;
 import com.waynesouza.transactionprocessor.domain.User;
 import com.waynesouza.transactionprocessor.dto.request.UserRequestDTO;
 import com.waynesouza.transactionprocessor.dto.response.UserResponseDTO;
+import com.waynesouza.transactionprocessor.exception.NotFoundException;
 import com.waynesouza.transactionprocessor.repository.UserRepository;
 import com.waynesouza.transactionprocessor.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -38,7 +39,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO findById(UUID id) {
         logger.info("Finding user by id: {}", id);
-        User user = userRepository.findById(id).orElse(null); // TODO create NotFoundException
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
@@ -46,8 +48,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteById(UUID id) {
         logger.info("Finding user by id: {}", id);
-        User user = userRepository.findById(id).orElse(null); // TODO create NotFoundException
-
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
         logger.info("Deleting user");
         userRepository.delete(user);
     }
