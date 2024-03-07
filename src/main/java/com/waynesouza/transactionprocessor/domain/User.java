@@ -10,6 +10,7 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
+import static com.waynesouza.transactionprocessor.util.PasswordEncoderUtil.encrypt;
 import static jakarta.persistence.EnumType.STRING;
 
 @Entity
@@ -91,7 +92,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = encrypt(password);
     }
 
 }
